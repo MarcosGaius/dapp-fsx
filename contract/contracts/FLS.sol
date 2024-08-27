@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract FLS is  ERC20, Pausable, AccessControl {
+contract FLS is ERC20, Pausable, AccessControl {
   bytes32 public constant PAUSER_ROLE = keccak256("PAUSER");
   bytes32 public constant MINTER_ROLE = keccak256("MINTER");
   bytes32 public constant OWNER_ROLE = keccak256("OWNER");
@@ -13,18 +13,20 @@ contract FLS is  ERC20, Pausable, AccessControl {
   constructor() ERC20("FarmlandStocks", "FLS") {
     _grantRole(OWNER_ROLE, msg.sender);
     _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    _grantRole(PAUSER_ROLE, msg.sender);
+    _grantRole(MINTER_ROLE, msg.sender); 
   }
 
   function decimals() public pure override returns (uint8) {
     return 6;
   }
 
-  function mint(address account, uint256 amount) public virtual whenNotPaused onlyRole(MINTER_ROLE) returns (bool) {
+  function mint(address account, uint256 amount) public whenNotPaused onlyRole(MINTER_ROLE) returns (bool) {
     _mint(account, amount);
     return true;
   }
 
-  function burn(address account, uint256 amount) public virtual whenNotPaused onlyRole(MINTER_ROLE) returns (bool) {
+  function burn(address account, uint256 amount) public whenNotPaused onlyRole(MINTER_ROLE) returns (bool) {
     _burn(account, amount);
     return true;
   }
@@ -39,11 +41,9 @@ contract FLS is  ERC20, Pausable, AccessControl {
 
   // check if an account has the role, owner is always authorized
   function _checkRole(bytes32 role, address account) internal view virtual override {
-    if(hasRole(OWNER_ROLE, account)) {
+    if (hasRole(OWNER_ROLE, account) || hasRole(role, account)) {
       return;
     }
-    if (!hasRole(role, account)) {
-      revert AccessControlUnauthorizedAccount(account, role);
-    }
+    revert AccessControlUnauthorizedAccount(account, role);
   }
 }

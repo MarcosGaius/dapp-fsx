@@ -14,7 +14,7 @@ describe("LiquidityPool Contract", function () {
     const flsToken = await hre.viem.deployContract("FLS");
     const flsAsOtherAccount = await hre.viem.getContractAt("FLS", flsToken.address, { client: { wallet: otherAccount } });
 
-    const liquidityPool = await hre.viem.deployContract("LiquidityPool", [usdc.address, flsToken.address, 1n]);
+    const liquidityPool = await hre.viem.deployContract("LiquidityPool", [usdc.address, flsToken.address, BigInt(1e6)]);
     const liquidityPoolAsOtherAccount = await hre.viem.getContractAt("LiquidityPool", liquidityPool.address, {
       client: { wallet: otherAccount },
     });
@@ -37,7 +37,7 @@ describe("LiquidityPool Contract", function () {
   describe("Deployment", function () {
     it("Should set the right initial exchange rate", async function () {
       const { liquidityPool } = await loadFixture(deployContractsFixture);
-      expect(await liquidityPool.read.getExchangeRate()).to.equal(1n);
+      expect(await liquidityPool.read.getExchangeRate()).to.equal(BigInt(1e6));
     });
 
     it("Should assign the minter role to the pool contract", async function () {
