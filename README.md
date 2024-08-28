@@ -4,6 +4,8 @@
 
 There are two contracts, built upon openzeppelin library. One ERC20 representing a RWA called FLS and a Liquidity Pool which allows users to swap FLS for USDC and vice-versa. There's a dApp which allows, in a user-friendly and web3 themed way, the user to interact with the contracts.
 
+**Deployment at**: https://dapp-fsx.vercel.app/
+
 ## Technologies Used
 
 - Smart Contracts: OpenZeppelin contracts, Hardhat for development, testing, and deployment, and Viem for blockchain interactions.
